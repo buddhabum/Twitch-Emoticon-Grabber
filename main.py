@@ -35,6 +35,7 @@ if(dataFile):
 			json.dump(emotes, outfile, sort_keys=True,indent=4, separators=(',',': '))
 
 def my_op(emote):
+	global count
 	code = emote['regex']
 	number = emote['images'][0]['emoticon_set']
 	
