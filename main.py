@@ -47,6 +47,7 @@ def my_op(emote):
 			if(printme):
 				print('Downloading: ' + str(code) + ' in ... ' + filePath)
 			urllib.request.urlretrieve(emote['images'][0]['url'], filePath)
+			count+=1
 		else:
 			if(printme):
 				print('skipped')
@@ -64,6 +65,7 @@ pool.join()
 
 
 end = time.time()
+print('Downloaded ' +str(count) +' new files')
 print('Running time: ' + str(end - start))
 
 
