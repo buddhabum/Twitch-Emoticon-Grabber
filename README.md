@@ -1,4 +1,5 @@
-# Twitch Emoticon Grabber
+# Twitch Emoticon Grabber - Dec 2018 Update
+## Had to make some updates to the tool to reflect new twitch endpoints, but the end-goal is the same
 
 A tool written in Python 3 to grab all twitch emoticon images in their highest resolution and download them into a folder.
 
