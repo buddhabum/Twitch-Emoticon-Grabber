@@ -20,47 +20,47 @@ start = time.time()
 
 
 if not os.path.exists('./emotes'):
-	os.makedirs('./emotes')
+        os.makedirs('./emotes')
 
 print('Saving emotes to folder: ' + os.path.abspath('./emotes') + '...')
 print('Grabbing emote list...')
 
-emotes = json.load(urllib.request.urlopen('https://api.twitch.tv/kraken/chat/emoticons/'))
-
+req = urllib.request.urlopen('https://twitchemotes.com/api_cache/v3/global.json').readall().decode('utf-8')
+emotes = json.loads(req)
 
 #Pretty Print the JSON
 if(dataFile):
-	if not os.path.exists('data.txt'):
-		with open('data.txt', 'w') as outfile:
-			json.dump(emotes, outfile, sort_keys=True,indent=4, separators=(',',': '))
+        if not os.path.exists('data.txt'):
+                with open('data.txt', 'w') as outfile:
+                        json.dump(emotes, outfile, sort_keys=True,indent=4, separators=(',',': '))
 
-def my_op(emote):
-	global count
-	code = emote['regex']
-	number = emote['images'][0]['emoticon_set']
-	
-	try:
-		parentPath = './emotes/'+str(number)
-		if not os.path.exists(parentPath):
-			os.makedirs(parentPath)
-		filePath = './emotes/'+str(number) +'/'+str(code)+'.png'
-		if not os.path.exists(filePath):
-			if(printme):
-				print('Downloading: ' + str(code) + ' in ... ' + filePath)
-			urllib.request.urlretrieve(emote['images'][0]['url'], filePath)
-			count+=1
-		else:
-			if(printme):
-				print('skipped')
-		
-		
-	except Exception as e: 
-			print(e)
 
-			
-for emote in emotes['emoticons']: 
-	pool.apply_async(my_op, (emote,))
-	
+def my_op(v):
+        global count
+        code = v['code']
+        number = v['id']
+
+        try:
+                parentPath = './emotes/'+str(number)
+                if not os.path.exists(parentPath):
+                        os.makedirs(parentPath)
+                filePath = './emotes/'+str(number) +'/'+str(code)+'.png'
+                if not os.path.exists(filePath):
+                        if(printme):
+                                print('Downloading: ' + str(code) + ' in ... ' + filePath)
+                        urllib.request.urlretrieve("https://static-cdn.jtvnw.net/emoticons/v1/{0}/1.0".format(number), filePath)
+                        count+=1
+                else:
+                        if(printme):
+                                print('skipped')
+
+        except Exception as e:
+                        print(e)
+
+
+for (k, v) in emotes.items():
+        pool.apply_async(my_op, (v,))
+
 pool.close()
 pool.join()
 
@@ -68,7 +68,3 @@ pool.join()
 end = time.time()
 print('Downloaded ' +str(count) +' new files')
 print('Running time: ' + str(end - start))
-
-
-
-
